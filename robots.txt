@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://india-finance-calculator.pages.dev
+Sitemap: https://india-finance-calculator.pages.dev/sitemap.xml
