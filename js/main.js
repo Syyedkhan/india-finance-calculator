@@ -39,7 +39,6 @@ function calculateEMI() {
     const totalPayment = emi * months;
     const totalInterest = totalPayment - loanAmount;
 
-    // Amortization schedule
     let balance = loanAmount;
     let scheduleHTML = '<h3>Year-wise Breakdown</h3>';
     scheduleHTML += '<div class="table-wrap"><table class="amort-table">';
@@ -251,59 +250,44 @@ function calculateFD() {
    5. SALARY CALCULATOR
    ============================================ */
 function calculateSalary() {
-    const ctc = parseFloat(document.getElementById("ctc").value);
-    const pfOption = document.getElementById("pfOption").value;
-    const ptOption = document.getElementById("ptOption").value;
+    const basic = parseFloat(document.getElementById("basicSalary").value) || 0;
+    const hra = parseFloat(document.getElementById("hra").value) || 0;
+    const special = parseFloat(document.getElementById("specialAllowance").value) || 0;
+    const otherAllow = parseFloat(document.getElementById("otherAllowances").value) || 0;
+    const empPF = parseFloat(document.getElementById("empPF").value) || 0;
+    const profTax = parseFloat(document.getElementById("profTax").value) || 0;
+    const otherDed = parseFloat(document.getElementById("otherDeductions").value) || 0;
+    const applyTax = document.getElementById("applyTax").value;
     const resultDiv = document.getElementById("salaryResult");
 
-    if (!ctc || ctc <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ CTC 0 se bada hona chahiye.</p>';
+    if (basic <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Basic salary 0 se bada hona chahiye.</p>';
         return;
     }
 
-    // Basic = 40% of CTC (approx standard)
-    const basic = ctc * 0.40;
-    const hra = basic * 0.40;
-    const specialAllowance = ctc - basic - hra;
+    const grossMonthly = basic + hra + special + otherAllow;
+    const grossAnnual = grossMonthly * 12;
 
-    // PF = 12% of basic
-    const pf = pfOption === "yes" ? basic * 0.12 : 0;
-
-    // Professional Tax = ₹200/month = ₹2400/year
-    const pt = ptOption === "yes" ? 2400 : 0;
-
-    // Standard deduction
-    const standardDeduction = 50000;
-
-    // Taxable income (new regime, approx)
-    const taxableIncome = ctc - standardDeduction;
-
-    // New regime tax FY 2025-26
-    let tax = 0;
-    if (taxableIncome > 300000) {
-        tax += Math.min(taxableIncome, 700000) > 300000 ? (Math.min(taxableIncome, 700000) - 300000) * 0.05 : 0;
+    let annualTax = 0;
+    if (applyTax === "yes") {
+        const taxableIncome = Math.max(0, grossAnnual - 75000);
+        const slabs = [[300000, 0], [700000, 0.05], [1000000, 0.10], [1200000, 0.15], [1500000, 0.20], [Infinity, 0.30]];
+        let prev = 0;
+        for (let [limit, rate] of slabs) {
+            if (taxableIncome > prev) {
+                const amt = Math.min(taxableIncome, limit) - prev;
+                annualTax += amt * rate;
+                prev = limit;
+            }
+        }
+        if (taxableIncome <= 700000) annualTax = 0;
+        annualTax = annualTax * 1.04;
     }
-    if (taxableIncome > 700000) {
-        tax += (Math.min(taxableIncome, 1000000) - 700000) * 0.10;
-    }
-    if (taxableIncome > 1000000) {
-        tax += (Math.min(taxableIncome, 1200000) - 1000000) * 0.15;
-    }
-    if (taxableIncome > 1200000) {
-        tax += (Math.min(taxableIncome, 1500000) - 1200000) * 0.20;
-    }
-    if (taxableIncome > 1500000) {
-        tax += (taxableIncome - 1500000) * 0.30;
-    }
+    const monthlyTax = annualTax / 12;
 
-    // Rebate 87A: income up to 7L no tax
-    if (taxableIncome <= 700000) tax = 0;
-
-    const cess = tax * 0.04;
-    const totalTax = tax + cess;
-    const annualDeductions = pf + pt + totalTax;
-    const annualInHand = ctc - annualDeductions;
-    const monthlyInHand = annualInHand / 12;
+    const totalDeductions = empPF + profTax + otherDed + monthlyTax;
+    const netMonthly = grossMonthly - totalDeductions;
+    const netAnnual = netMonthly * 12;
 
     resultDiv.innerHTML = `
         <h2>Salary Breakdown</h2>
@@ -311,33 +295,36 @@ function calculateSalary() {
         <div class="emi-result-grid">
             <div class="emi-result-card">
                 <span>Monthly In-Hand</span>
-                <strong>${formatINR(monthlyInHand)}</strong>
+                <strong>${formatINR(netMonthly)}</strong>
             </div>
             <div class="emi-result-card">
                 <span>Annual In-Hand</span>
-                <strong>${formatINR(annualInHand)}</strong>
+                <strong>${formatINR(netAnnual)}</strong>
             </div>
             <div class="emi-result-card">
                 <span>Total Deductions</span>
-                <strong>${formatINR(annualDeductions)}</strong>
+                <strong>${formatINR(totalDeductions)}</strong>
             </div>
         </div>
 
-        <h3>Deduction Breakdown (Annual)</h3>
+        <h3>Detailed Breakdown (Monthly)</h3>
         <div class="table-wrap">
             <table class="amort-table">
                 <tr><th>Component</th><th>Amount</th></tr>
-                <tr><td>Basic Salary (40%)</td><td>${formatINR(basic)}</td></tr>
-                <tr><td>HRA (40% of Basic)</td><td>${formatINR(hra)}</td></tr>
-                <tr><td>Special Allowance</td><td>${formatINR(specialAllowance)}</td></tr>
-                <tr><td>PF Deduction</td><td>${formatINR(pf)}</td></tr>
-                <tr><td>Professional Tax</td><td>${formatINR(pt)}</td></tr>
-                <tr><td>Income Tax + Cess</td><td>${formatINR(totalTax)}</td></tr>
-                <tr><td><strong>Net Annual In-Hand</strong></td><td><strong>${formatINR(annualInHand)}</strong></td></tr>
+                <tr><td>Basic Salary</td><td>${formatINR(basic)}</td></tr>
+                <tr><td>HRA</td><td>${formatINR(hra)}</td></tr>
+                <tr><td>Special Allowance</td><td>${formatINR(special)}</td></tr>
+                <tr><td>Other Allowances</td><td>${formatINR(otherAllow)}</td></tr>
+                <tr><td><strong>Gross Monthly Salary</strong></td><td><strong>${formatINR(grossMonthly)}</strong></td></tr>
+                <tr><td>Employee PF</td><td>- ${formatINR(empPF)}</td></tr>
+                <tr><td>Professional Tax</td><td>- ${formatINR(profTax)}</td></tr>
+                <tr><td>Other Deductions</td><td>- ${formatINR(otherDed)}</td></tr>
+                <tr><td>Income Tax</td><td>- ${formatINR(monthlyTax)}</td></tr>
+                <tr><td><strong>Net Monthly In-Hand</strong></td><td><strong>${formatINR(netMonthly)}</strong></td></tr>
             </table>
         </div>
 
-        <p class="note">💡 Tip: Yeh approximate calculation hai. Actual salary structure company ke hisaab se alag ho sakta hai.</p>
+        <p class="note">💡 Tip: PF, Professional Tax, aur Other Deductions aapki salary slip se check karein. Income Tax approximate hai.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
