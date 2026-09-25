@@ -189,3 +189,54 @@ function calculateSIP() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   4. FD CALCULATOR (Hindi)
+   ============================================ */
+function calculateFD() {
+    const principal = parseFloat(document.getElementById("fdAmount").value);
+    const annualRate = parseFloat(document.getElementById("fdRate").value);
+    const years = parseFloat(document.getElementById("fdYears").value);
+    const n = parseFloat(document.getElementById("fdCompound").value);
+    const resultDiv = document.getElementById("fdResult");
+
+    if (!principal || principal <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ जमा राशि 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!annualRate || annualRate <= 0 || annualRate > 20) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ब्याज दर 0 से 20% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 20) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 0.5 से 20 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const rate = annualRate / 100;
+    const maturity = principal * Math.pow(1 + rate / n, n * years);
+    const interest = maturity - principal;
+
+    resultDiv.innerHTML = `
+        <h2>FD परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>मूलधन</span>
+                <strong>${formatINR(principal)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अर्जित ब्याज</span>
+                <strong>${formatINR(interest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी राशि</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 सुझाव: FD पर ब्याज कर योग्य होता है। ₹40,000+ ब्याज पर TDS लगता है।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
