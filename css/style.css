@@ -535,3 +535,16 @@ body {
 .info-section strong {
     color: var(--text-dark);
 }
+/* Language Switch Button */
+.lang-switch {
+    background: #ff9933;
+    color: white !important;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.lang-switch:hover {
+    background: #e68a2e;
+}
