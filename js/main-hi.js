@@ -334,3 +334,124 @@ function calculateSalary() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   6. INCOME TAX CALCULATOR (Hindi)
+   Old Regime vs New Regime — FY 2025-26
+   ============================================ */
+
+function calcOldRegime(income, age, ded) {
+    const taxable = Math.max(0, income - 50000 - ded);
+    let tax = 0;
+    let slabs = [];
+
+    if (age === "below60") {
+        slabs = [
+            [250000, 0],
+            [500000, 0.05],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
+    } else if (age === "60to80") {
+        slabs = [
+            [300000, 0],
+            [500000, 0.05],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
+    } else {
+        slabs = [
+            [500000, 0],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
+    }
+
+    let prev = 0;
+    for (let [limit, rate] of slabs) {
+        if (taxable > prev) {
+            const amt = Math.min(taxable, limit) - prev;
+            tax += amt * rate;
+            prev = limit;
+        }
+    }
+
+    if (taxable <= 500000) {
+        tax = Math.max(0, tax - 12500);
+    }
+
+    return tax;
+}
+
+function calcNewRegime(income) {
+    const taxable = Math.max(0, income - 75000);
+    const slabs = [
+        [400000, 0],
+        [800000, 0.05],
+        [1200000, 0.10],
+        [1600000, 0.15],
+        [2000000, 0.20],
+        [2400000, 0.25],
+        [Infinity, 0.30]
+    ];
+    let tax = 0, prev = 0;
+    for (let [limit, rate] of slabs) {
+        if (taxable > prev) {
+            const amt = Math.min(taxable, limit) - prev;
+            tax += amt * rate;
+            prev = limit;
+        }
+    }
+
+    if (taxable <= 1200000) {
+        tax = Math.max(0, tax - 60000);
+    }
+
+    return tax;
+}
+
+function calculateIncomeTax() {
+    const income = parseFloat(document.getElementById("taxIncome").value) || 0;
+    const age = document.getElementById("taxAge").value;
+    const ded = (parseFloat(document.getElementById("ded80c").value) || 0)
+              + (parseFloat(document.getElementById("ded80d").value) || 0)
+              + (parseFloat(document.getElementById("ded24b").value) || 0)
+              + (parseFloat(document.getElementById("dednps").value) || 0);
+    const resultDiv = document.getElementById("taxResult");
+
+    if (!income || income <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ वार्षिक आय 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+
+    const oldTax = calcOldRegime(income, age, ded);
+    const newTax = calcNewRegime(income);
+
+    const oldTotal = oldTax * 1.04;
+    const newTotal = newTax * 1.04;
+
+    const better = oldTotal < newTotal ? "पुरानी" : "नई";
+    const saving = Math.abs(oldTotal - newTotal);
+
+    resultDiv.innerHTML = `
+        <h2>टैक्स तुलना (FY 2025-26)</h2>
+
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>विवरण</th><th>पुरानी व्यवस्था</th><th>नई व्यवस्था</th></tr>
+                <tr><td>कुल आय</td><td>${formatINR(income)}</td><td>${formatINR(income)}</td></tr>
+                <tr><td>कटौतियाँ</td><td>${formatINR(50000 + ded)}</td><td>${formatINR(75000)}</td></tr>
+                <tr><td>कर योग्य आय</td><td>${formatINR(Math.max(0, income - 50000 - ded))}</td><td>${formatINR(Math.max(0, income - 75000))}</td></tr>
+                <tr><td>इनकम टैक्स (रिबेट से पहले)</td><td>${formatINR(oldTax + (Math.max(0, income - 50000 - ded) <= 500000 ? 12500 : 0))}</td><td>${formatINR(newTax + (Math.max(0, income - 75000) <= 1200000 ? 60000 : 0))}</td></tr>
+                <tr><td>धारा 87A रिबेट</td><td>- ${formatINR(Math.max(0, income - 50000 - ded) <= 500000 ? 12500 : 0)}</td><td>- ${formatINR(Math.max(0, income - 75000) <= 1200000 ? 60000 : 0)}</td></tr>
+                <tr><td>रिबेट के बाद टैक्स</td><td>${formatINR(oldTax)}</td><td>${formatINR(newTax)}</td></tr>
+                <tr><td>सेस (4%)</td><td>${formatINR(oldTax * 0.04)}</td><td>${formatINR(newTax * 0.04)}</td></tr>
+                <tr><td><strong>कुल टैक्स</strong></td><td><strong>${formatINR(oldTotal)}</strong></td><td><strong>${formatINR(newTotal)}</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">✅ <strong>${better} व्यवस्था</strong> आपके लिए बेहतर है — आप ${formatINR(saving)} बचा सकते हैं!</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
