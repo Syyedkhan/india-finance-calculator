@@ -240,3 +240,97 @@ function calculateFD() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   5. SALARY CALCULATOR (Hindi)
+   ============================================ */
+function calculateSalary() {
+    const basic = parseFloat(document.getElementById("basicSalary").value) || 0;
+    const hra = parseFloat(document.getElementById("hra").value) || 0;
+    const special = parseFloat(document.getElementById("specialAllowance").value) || 0;
+    const otherAllow = parseFloat(document.getElementById("otherAllowances").value) || 0;
+    const empPF = parseFloat(document.getElementById("empPF").value) || 0;
+    const profTax = parseFloat(document.getElementById("profTax").value) || 0;
+    const otherDed = parseFloat(document.getElementById("otherDeductions").value) || 0;
+    const applyTax = document.getElementById("applyTax").value;
+    const resultDiv = document.getElementById("salaryResult");
+
+    if (basic <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ बेसिक सैलरी 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+
+    const grossMonthly = basic + hra + special + otherAllow;
+    const grossAnnual = grossMonthly * 12;
+
+    let annualTax = 0;
+    if (applyTax === "yes") {
+        const taxableIncome = Math.max(0, grossAnnual - 75000);
+        const slabs = [
+            [400000, 0],
+            [800000, 0.05],
+            [1200000, 0.10],
+            [1600000, 0.15],
+            [2000000, 0.20],
+            [2400000, 0.25],
+            [Infinity, 0.30]
+        ];
+        let prev = 0;
+        for (let [limit, rate] of slabs) {
+            if (taxableIncome > prev) {
+                const amt = Math.min(taxableIncome, limit) - prev;
+                annualTax += amt * rate;
+                prev = limit;
+            }
+        }
+        if (taxableIncome <= 1200000) {
+            annualTax = Math.max(0, annualTax - 60000);
+        }
+        annualTax = annualTax * 1.04;
+    }
+    const monthlyTax = annualTax / 12;
+
+    const totalDeductions = empPF + profTax + otherDed + monthlyTax;
+    const netMonthly = grossMonthly - totalDeductions;
+    const netAnnual = netMonthly * 12;
+
+    resultDiv.innerHTML = `
+        <h2>सैलरी विवरण</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>मासिक इन-हैंड</span>
+                <strong>${formatINR(netMonthly)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>वार्षिक इन-हैंड</span>
+                <strong>${formatINR(netAnnual)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कुल कटौतियाँ</span>
+                <strong>${formatINR(totalDeductions)}</strong>
+            </div>
+        </div>
+
+        <h3>विस्तृत विवरण (मासिक)</h3>
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>घटक</th><th>राशि</th></tr>
+                <tr><td>बेसिक सैलरी</td><td>${formatINR(basic)}</td></tr>
+                <tr><td>HRA</td><td>${formatINR(hra)}</td></tr>
+                <tr><td>स्पेशल अलाउंस</td><td>${formatINR(special)}</td></tr>
+                <tr><td>अन्य अलाउंस</td><td>${formatINR(otherAllow)}</td></tr>
+                <tr><td><strong>कुल मासिक सैलरी</strong></td><td><strong>${formatINR(grossMonthly)}</strong></td></tr>
+                <tr><td>कर्मचारी PF</td><td>- ${formatINR(empPF)}</td></tr>
+                <tr><td>प्रोफेशनल टैक्स</td><td>- ${formatINR(profTax)}</td></tr>
+                <tr><td>अन्य कटौतियाँ</td><td>- ${formatINR(otherDed)}</td></tr>
+                <tr><td>इनकम टैक्स (नई व्यवस्था)</td><td>- ${formatINR(monthlyTax)}</td></tr>
+                <tr><td><strong>शुद्ध मासिक इन-हैंड</strong></td><td><strong>${formatINR(netMonthly)}</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">💡 सुझाव: टैक्स नई व्यवस्था (₹75,000 मानक कटौती) के साथ गणना किया गया है। PF और अन्य कटौतियाँ अपनी सैलरी स्लिप से जांचें।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
