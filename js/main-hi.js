@@ -136,3 +136,56 @@ function calculateGST() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   3. SIP CALCULATOR (Hindi)
+   ============================================ */
+function calculateSIP() {
+    const monthly = parseFloat(document.getElementById("sipAmount").value);
+    const annualRate = parseFloat(document.getElementById("sipRate").value);
+    const years = parseFloat(document.getElementById("sipYears").value);
+    const resultDiv = document.getElementById("sipResult");
+
+    if (!monthly || monthly <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ मासिक निवेश 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!annualRate || annualRate <= 0 || annualRate > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ रिटर्न दर 0 से 50% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 1 से 50 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const monthlyRate = annualRate / 12 / 100;
+    const months = years * 12;
+
+    const futureValue = monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+    const invested = monthly * months;
+    const returns = futureValue - invested;
+
+    resultDiv.innerHTML = `
+        <h2>SIP परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>निवेशित राशि</span>
+                <strong>${formatINR(invested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अनुमानित रिटर्न</span>
+                <strong>${formatINR(returns)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी वैल्यू</span>
+                <strong>${formatINR(futureValue)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 सुझाव: SIP में जितना लंबा निवेश करेंगे, उतना ज्यादा कंपाउंडिंग का फायदा मिलेगा।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
