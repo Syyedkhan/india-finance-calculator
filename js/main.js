@@ -1,5 +1,6 @@
 /* ============================================
    India Finance Calculator - Main JavaScript
+   Updated for FY 2025-26 (AY 2026-27)
    ============================================ */
 
 // Indian number format helper
@@ -18,15 +19,15 @@ function calculateEMI() {
     const resultDiv = document.getElementById("emiResult");
 
     if (!loanAmount || loanAmount <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Loan amount 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Loan amount must be greater than 0.</p>';
         return;
     }
     if (!annualRate || annualRate <= 0 || annualRate > 50) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate 0 se 50% ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be between 0 and 50%.</p>';
         return;
     }
     if (!years || years <= 0 || years > 40) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Tenure 1 se 40 saal ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Tenure must be between 1 and 40 years.</p>';
         return;
     }
 
@@ -82,7 +83,7 @@ function calculateEMI() {
 
         ${scheduleHTML}
 
-        <p class="note">💡 Tip: Zyada down payment ya kam tenure se total interest kam ho sakta hai.</p>
+        <p class="note">💡 Tip: A higher down payment or shorter tenure reduces total interest.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
@@ -99,7 +100,7 @@ function calculateGST() {
     const resultDiv = document.getElementById("gstResult");
 
     if (!amount || amount <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Amount 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Amount must be greater than 0.</p>';
         return;
     }
 
@@ -133,7 +134,7 @@ function calculateGST() {
             </div>
         </div>
 
-        <p class="note">💡 Tip: GST rates India mein 5%, 12%, 18%, aur 28% hoti hain.</p>
+        <p class="note">💡 Tip: GST rates in India are 5%, 12%, 18%, and 28%.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
@@ -150,15 +151,15 @@ function calculateSIP() {
     const resultDiv = document.getElementById("sipResult");
 
     if (!monthly || monthly <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Monthly investment 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Monthly investment must be greater than 0.</p>';
         return;
     }
     if (!annualRate || annualRate <= 0 || annualRate > 50) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Return rate 0 se 50% ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Return rate must be between 0 and 50%.</p>';
         return;
     }
     if (!years || years <= 0 || years > 50) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period 1 se 50 saal ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 1 and 50 years.</p>';
         return;
     }
 
@@ -187,7 +188,7 @@ function calculateSIP() {
             </div>
         </div>
 
-        <p class="note">💡 Tip: SIP mein jitna lamba invest karenge, utna zyada compounding ka fayda milega.</p>
+        <p class="note">💡 Tip: The longer you stay invested in SIP, the more you benefit from compounding.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
@@ -205,15 +206,15 @@ function calculateFD() {
     const resultDiv = document.getElementById("fdResult");
 
     if (!principal || principal <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Deposit amount 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Deposit amount must be greater than 0.</p>';
         return;
     }
     if (!annualRate || annualRate <= 0 || annualRate > 20) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate 0 se 20% ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be between 0 and 20%.</p>';
         return;
     }
     if (!years || years <= 0 || years > 20) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Time period 0.5 se 20 saal ke beech hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Time period must be between 0.5 and 20 years.</p>';
         return;
     }
 
@@ -239,7 +240,7 @@ function calculateFD() {
             </div>
         </div>
 
-        <p class="note">💡 Tip: FD par interest taxable hota hai. TDS 40,000+ interest par lagta hai.</p>
+        <p class="note">💡 Tip: FD interest is taxable. TDS applies if interest exceeds ₹40,000 per year.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
@@ -261,7 +262,7 @@ function calculateSalary() {
     const resultDiv = document.getElementById("salaryResult");
 
     if (basic <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Basic salary 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Basic salary must be greater than 0.</p>';
         return;
     }
 
@@ -270,8 +271,17 @@ function calculateSalary() {
 
     let annualTax = 0;
     if (applyTax === "yes") {
+        // New Regime FY 2025-26 with ₹75,000 standard deduction
         const taxableIncome = Math.max(0, grossAnnual - 75000);
-        const slabs = [[300000, 0], [700000, 0.05], [1000000, 0.10], [1200000, 0.15], [1500000, 0.20], [Infinity, 0.30]];
+        const slabs = [
+            [400000, 0],
+            [800000, 0.05],
+            [1200000, 0.10],
+            [1600000, 0.15],
+            [2000000, 0.20],
+            [2400000, 0.25],
+            [Infinity, 0.30]
+        ];
         let prev = 0;
         for (let [limit, rate] of slabs) {
             if (taxableIncome > prev) {
@@ -280,7 +290,11 @@ function calculateSalary() {
                 prev = limit;
             }
         }
-        if (taxableIncome <= 700000) annualTax = 0;
+        // Section 87A Rebate: taxable income up to ₹12,00,000, max rebate ₹60,000
+        if (taxableIncome <= 1200000) {
+            annualTax = Math.max(0, annualTax - 60000);
+        }
+        // 4% Health & Education Cess
         annualTax = annualTax * 1.04;
     }
     const monthlyTax = annualTax / 12;
@@ -319,12 +333,12 @@ function calculateSalary() {
                 <tr><td>Employee PF</td><td>- ${formatINR(empPF)}</td></tr>
                 <tr><td>Professional Tax</td><td>- ${formatINR(profTax)}</td></tr>
                 <tr><td>Other Deductions</td><td>- ${formatINR(otherDed)}</td></tr>
-                <tr><td>Income Tax</td><td>- ${formatINR(monthlyTax)}</td></tr>
+                <tr><td>Income Tax (New Regime)</td><td>- ${formatINR(monthlyTax)}</td></tr>
                 <tr><td><strong>Net Monthly In-Hand</strong></td><td><strong>${formatINR(netMonthly)}</strong></td></tr>
             </table>
         </div>
 
-        <p class="note">💡 Tip: PF, Professional Tax, aur Other Deductions aapki salary slip se check karein. Income Tax approximate hai.</p>
+        <p class="note">💡 Tip: Tax is calculated using the New Regime with ₹75,000 standard deduction. Verify PF and other deductions from your salary slip.</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
@@ -333,18 +347,37 @@ function calculateSalary() {
 
 /* ============================================
    6. INCOME TAX CALCULATOR
+   Old Regime vs New Regime — FY 2025-26
    ============================================ */
+
 function calcOldRegime(income, age, ded) {
     const taxable = Math.max(0, income - 50000 - ded);
     let tax = 0;
     let slabs = [];
 
     if (age === "below60") {
-        slabs = [[250000, 0], [500000, 0.05], [1000000, 0.20], [Infinity, 0.30]];
+        // Below 60 years
+        slabs = [
+            [250000, 0],
+            [500000, 0.05],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
     } else if (age === "60to80") {
-        slabs = [[300000, 0], [500000, 0.05], [1000000, 0.20], [Infinity, 0.30]];
+        // Senior citizens (60-80)
+        slabs = [
+            [300000, 0],
+            [500000, 0.05],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
     } else {
-        slabs = [[500000, 0], [1000000, 0.20], [Infinity, 0.30]];
+        // Super senior citizens (80+)
+        slabs = [
+            [500000, 0],
+            [1000000, 0.20],
+            [Infinity, 0.30]
+        ];
     }
 
     let prev = 0;
@@ -355,12 +388,27 @@ function calcOldRegime(income, age, ded) {
             prev = limit;
         }
     }
+
+    // Section 87A Rebate (Old Regime): taxable income up to ₹5,00,000, max rebate ₹12,500
+    if (taxable <= 500000) {
+        tax = Math.max(0, tax - 12500);
+    }
+
     return tax;
 }
 
 function calcNewRegime(income) {
+    // New Regime FY 2025-26 with ₹75,000 standard deduction
     const taxable = Math.max(0, income - 75000);
-    const slabs = [[300000, 0], [700000, 0.05], [1000000, 0.10], [1200000, 0.15], [1500000, 0.20], [Infinity, 0.30]];
+    const slabs = [
+        [400000, 0],
+        [800000, 0.05],
+        [1200000, 0.10],
+        [1600000, 0.15],
+        [2000000, 0.20],
+        [2400000, 0.25],
+        [Infinity, 0.30]
+    ];
     let tax = 0, prev = 0;
     for (let [limit, rate] of slabs) {
         if (taxable > prev) {
@@ -369,7 +417,12 @@ function calcNewRegime(income) {
             prev = limit;
         }
     }
-    if (taxable <= 700000) tax = 0;
+
+    // Section 87A Rebate (New Regime): taxable income up to ₹12,00,000, max rebate ₹60,000
+    if (taxable <= 1200000) {
+        tax = Math.max(0, tax - 60000);
+    }
+
     return tax;
 }
 
@@ -383,13 +436,14 @@ function calculateIncomeTax() {
     const resultDiv = document.getElementById("taxResult");
 
     if (!income || income <= 0) {
-        resultDiv.innerHTML = '<p class="error-msg">⚠️ Annual income 0 se bada hona chahiye.</p>';
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Annual income must be greater than 0.</p>';
         return;
     }
 
     const oldTax = calcOldRegime(income, age, ded);
     const newTax = calcNewRegime(income);
 
+    // 4% Health & Education Cess
     const oldTotal = oldTax * 1.04;
     const newTotal = newTax * 1.04;
 
@@ -397,7 +451,7 @@ function calculateIncomeTax() {
     const saving = Math.abs(oldTotal - newTotal);
 
     resultDiv.innerHTML = `
-        <h2>Tax Comparison</h2>
+        <h2>Tax Comparison (FY 2025-26)</h2>
 
         <div class="table-wrap">
             <table class="amort-table">
@@ -405,13 +459,15 @@ function calculateIncomeTax() {
                 <tr><td>Gross Income</td><td>${formatINR(income)}</td><td>${formatINR(income)}</td></tr>
                 <tr><td>Deductions</td><td>${formatINR(50000 + ded)}</td><td>${formatINR(75000)}</td></tr>
                 <tr><td>Taxable Income</td><td>${formatINR(Math.max(0, income - 50000 - ded))}</td><td>${formatINR(Math.max(0, income - 75000))}</td></tr>
-                <tr><td>Income Tax</td><td>${formatINR(oldTax)}</td><td>${formatINR(newTax)}</td></tr>
+                <tr><td>Income Tax (before rebate)</td><td>${formatINR(oldTax + (Math.max(0, income - 50000 - ded) <= 500000 ? 12500 : 0))}</td><td>${formatINR(newTax + (Math.max(0, income - 75000) <= 1200000 ? 60000 : 0))}</td></tr>
+                <tr><td>Section 87A Rebate</td><td>- ${formatINR(Math.max(0, income - 50000 - ded) <= 500000 ? 12500 : 0)}</td><td>- ${formatINR(Math.max(0, income - 75000) <= 1200000 ? 60000 : 0)}</td></tr>
+                <tr><td>Tax after Rebate</td><td>${formatINR(oldTax)}</td><td>${formatINR(newTax)}</td></tr>
                 <tr><td>Cess (4%)</td><td>${formatINR(oldTax * 0.04)}</td><td>${formatINR(newTax * 0.04)}</td></tr>
                 <tr><td><strong>Total Tax</strong></td><td><strong>${formatINR(oldTotal)}</strong></td><td><strong>${formatINR(newTotal)}</strong></td></tr>
             </table>
         </div>
 
-        <p class="note">✅ <strong>${better} Regime</strong> better hai — Aap ${formatINR(saving)} bacha sakte hain!</p>
+        <p class="note">✅ <strong>${better} Regime</strong> is better for you — You save ${formatINR(saving)}!</p>
 
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
