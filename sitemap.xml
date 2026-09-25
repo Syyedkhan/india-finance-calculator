@@ -1,102 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- English Pages -->
   <url>
     <loc>https://india-finance-calculator.pages.dev/</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/emi-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/gst-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/sip-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/fd-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/salary-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/income-tax-calculator.html</loc>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog.html</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog/old-vs-new-tax-regime.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog/80c-tax-saving-options.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog/sip-vs-lumpsum.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog/home-loan-prepayment.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/blog/salary-structure-guide.html</loc>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Hindi Pages -->
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/index-hi.html</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/emi-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/gst-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/sip-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/fd-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/salary-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://india-finance-calculator.pages.dev/income-tax-calculator-hi.html</loc>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Legal Pages -->
   <url>
     <loc>https://india-finance-calculator.pages.dev/about.html</loc>
     <priority>0.5</priority>
     <changefreq>yearly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/contact.html</loc>
     <priority>0.5</priority>
     <changefreq>yearly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/privacy-policy.html</loc>
     <priority>0.3</priority>
     <changefreq>yearly</changefreq>
   </url>
-
   <url>
     <loc>https://india-finance-calculator.pages.dev/disclaimer.html</loc>
     <priority>0.3</priority>
