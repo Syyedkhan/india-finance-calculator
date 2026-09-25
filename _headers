@@ -1,0 +1,28 @@
+# सभी HTML पृष्ठ - हमेशा नवीनतम रखें
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# ब्लॉग HTML
+/blog/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# स्थिर छवि संसाधन - लंबी अवधि का cache
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS/JS
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# sitemap और robots - छोटी अवधि का cache
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
