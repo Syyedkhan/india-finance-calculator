@@ -86,3 +86,53 @@ function calculateEMI() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   2. GST CALCULATOR (Hindi)
+   ============================================ */
+function calculateGST() {
+    const amount = parseFloat(document.getElementById("gstAmount").value);
+    const rate = parseFloat(document.getElementById("gstRate").value);
+    const type = document.getElementById("gstType").value;
+    const resultDiv = document.getElementById("gstResult");
+
+    if (!amount || amount <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ राशि 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+
+    let netPrice, gstAmount, grossPrice;
+
+    if (type === "add") {
+        netPrice = amount;
+        gstAmount = amount * rate / 100;
+        grossPrice = amount + gstAmount;
+    } else {
+        grossPrice = amount;
+        netPrice = amount * 100 / (100 + rate);
+        gstAmount = grossPrice - netPrice;
+    }
+
+    resultDiv.innerHTML = `
+        <h2>GST परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>नेट प्राइस</span>
+                <strong>${formatINR(netPrice)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>GST राशि (${rate}%)</span>
+                <strong>${formatINR(gstAmount)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>ग्रॉस प्राइस</span>
+                <strong>${formatINR(grossPrice)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 सुझाव: भारत में GST दरें 5%, 12%, 18% और 28% हैं।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
