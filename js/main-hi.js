@@ -455,3 +455,86 @@ function calculateIncomeTax() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   7. LOAN ELIGIBILITY CALCULATOR (Hindi)
+   ============================================ */
+function calculateLoanEligibility() {
+    const monthlyIncome = parseFloat(document.getElementById("monthlyIncome").value) || 0;
+    const existingEmi = parseFloat(document.getElementById("existingEmi").value) || 0;
+    const loanType = document.getElementById("loanType").value;
+    const annualRate = parseFloat(document.getElementById("loanRate").value) || 0;
+    const years = parseFloat(document.getElementById("loanTenure").value) || 0;
+    const age = parseFloat(document.getElementById("age").value) || 0;
+    const resultDiv = document.getElementById("loanResult");
+
+    if (!monthlyIncome || monthlyIncome <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ मासिक आय 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!annualRate || annualRate <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ब्याज दर 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (age < 21 || age > 65) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ आयु 21 से 65 के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    // FOIR based on loan type
+    let foir = 0.50;
+    if (loanType === "car") foir = 0.40;
+    if (loanType === "personal") foir = 0.35;
+
+    // Max EMI possible
+    const maxEmi = (monthlyIncome * foir) - existingEmi;
+
+    if (maxEmi <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ आपकी मौजूदा EMI बहुत ज्यादा है। कोई अतिरिक्त लोन संभव नहीं है।</p>';
+        return;
+    }
+
+    // Max loan based on EMI capacity
+    const monthlyRate = annualRate / 12 / 100;
+    const months = years * 12;
+    const maxLoan = maxEmi * (Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months));
+
+    // Age-based tenure check
+    const maxTenureByAge = 65 - age;
+    let tenureWarning = "";
+    if (years > maxTenureByAge) {
+        tenureWarning = `<p class="note" style="background:#fff3cd;">⚠️ ध्यान दें: बैंक आमतौर पर लोन अवधि को 65 वर्ष की आयु तक सीमित करते हैं। आपकी आयु (${age}) के आधार पर अधिकतम अवधि लगभग ${maxTenureByAge} वर्ष है।</p>`;
+    }
+
+    // Total interest
+    const totalPayment = maxEmi * months;
+    const totalInterest = totalPayment - maxLoan;
+
+    resultDiv.innerHTML = `
+        <h2>लोन पात्रता परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>अधिकतम लोन</span>
+                <strong>${formatINR(maxLoan)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अधिकतम मासिक EMI</span>
+                <strong>${formatINR(maxEmi)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कुल ब्याज</span>
+                <strong>${formatINR(totalInterest)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 इस लोन प्रकार के लिए आपका FOIR <strong>${(foir * 100)}%</strong> है। मौजूदा EMI ${formatINR(existingEmi)} घटा दी गई है।</p>
+        ${tenureWarning}
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
