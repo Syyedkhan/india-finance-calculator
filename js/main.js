@@ -937,3 +937,55 @@ function calculateLumpsum() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   13. CAGR CALCULATOR (English)
+   ============================================ */
+function calculateCAGR() {
+    const initial = parseFloat(document.getElementById("cagrInitial").value) || 0;
+    const final = parseFloat(document.getElementById("cagrFinal").value) || 0;
+    const years = parseFloat(document.getElementById("cagrYears").value) || 0;
+    const resultDiv = document.getElementById("cagrResult");
+
+    if (!initial || initial <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Initial value must be greater than 0.</p>';
+        return;
+    }
+    if (!final || final <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Final value must be greater than 0.</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 0.5 and 50 years.</p>';
+        return;
+    }
+
+    // CAGR formula: [(Final / Initial)^(1/n) - 1] × 100
+    const cagr = (Math.pow(final / initial, 1 / years) - 1) * 100;
+    const absoluteReturn = ((final - initial) / initial) * 100;
+    const totalGain = final - initial;
+
+    resultDiv.innerHTML = `
+        <h2>CAGR Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>CAGR</span>
+                <strong>${cagr.toFixed(2)}%</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Absolute Return</span>
+                <strong>${absoluteReturn.toFixed(2)}%</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Total Gain</span>
+                <strong>${formatINR(totalGain)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Your investment grew at an average rate of <strong>${cagr.toFixed(2)}% per year</strong> over ${years} years.</p>
+        <p class="note">📊 Formula: [(${formatINR(final)} / ${formatINR(initial)})^(1/${years}) − 1] × 100 = ${cagr.toFixed(2)}%</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
