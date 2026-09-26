@@ -704,3 +704,92 @@ function calculateInsurance() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   10. NPS CALCULATOR (English)
+   ============================================ */
+function calculateNPS() {
+    const age = parseFloat(document.getElementById("npsAge").value) || 0;
+    const monthly = parseFloat(document.getElementById("npsMonthly").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("npsReturn").value) || 0;
+    const retireAge = parseFloat(document.getElementById("npsRetireAge").value) || 60;
+    const resultDiv = document.getElementById("npsResult");
+
+    if (!age || age < 18 || age > 60) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Age must be between 18 and 60.</p>';
+        return;
+    }
+    if (!monthly || monthly < 500) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Minimum monthly contribution is ₹500.</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Return rate must be between 1% and 30%.</p>';
+        return;
+    }
+    if (retireAge <= age) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Retirement age must be greater than current age.</p>';
+        return;
+    }
+
+    const years = retireAge - age;
+    const months = years * 12;
+    const monthlyRate = annualReturn / 12 / 100;
+
+    // Future value of SIP (monthly contributions)
+    const corpus = monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+
+    // Total invested
+    const invested = monthly * months;
+
+    // Returns earned
+    const returns = corpus - invested;
+
+    // At retirement: 60% lump sum, 40% annuity
+    const lumpSum = corpus * 0.60;
+    const annuityCorpus = corpus * 0.40;
+
+    // Estimated monthly pension (assume 6% annuity rate)
+    const annuityRate = 0.06;
+    const monthlyPension = (annuityCorpus * annuityRate) / 12;
+
+    resultDiv.innerHTML = `
+        <h2>NPS Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Total Invested</span>
+                <strong>${formatINR(invested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Estimated Returns</span>
+                <strong>${formatINR(returns)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Total Corpus</span>
+                <strong>${formatINR(corpus)}</strong>
+            </div>
+        </div>
+
+        <h3>At Retirement (Age ${retireAge})</h3>
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>60% Lump Sum (Tax-free)</span>
+                <strong>${formatINR(lumpSum)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>40% Annuity Corpus</span>
+                <strong>${formatINR(annuityCorpus)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Est. Monthly Pension</span>
+                <strong>${formatINR(monthlyPension)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Pension is estimated at 6% annuity rate. Actual rates vary by insurer and annuity option.</p>
+        <p class="note">📊 Tax benefit: Additional ₹50,000 deduction under Section 80CCD(1B) in Old Regime.</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
