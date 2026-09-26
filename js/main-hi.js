@@ -1021,3 +1021,76 @@ function calculatePPF() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   15. HRA CALCULATOR (Hindi)
+   ============================================ */
+function calculateHRA() {
+    const basic = parseFloat(document.getElementById("hraBasic").value) || 0;
+    const da = parseFloat(document.getElementById("hraDA").value) || 0;
+    const hraReceived = parseFloat(document.getElementById("hraReceived").value) || 0;
+    const rentPaid = parseFloat(document.getElementById("hraRent").value) || 0;
+    const cityType = document.getElementById("hraCity").value;
+    const resultDiv = document.getElementById("hraResult");
+
+    if (!basic || basic <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ बेसिक सैलरी 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!hraReceived || hraReceived <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ प्राप्त HRA 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!rentPaid || rentPaid <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ भुगतान किया गया किराया 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+
+    const basicPlusDA = basic + da;
+    const annualBasicPlusDA = basicPlusDA * 12;
+    const annualHRAReceived = hraReceived * 12;
+    const annualRentPaid = rentPaid * 12;
+
+    const condition1 = annualHRAReceived;
+    const condition2 = Math.max(0, annualRentPaid - (annualBasicPlusDA * 0.10));
+    const cityPercent = cityType === "metro" ? 0.50 : 0.40;
+    const condition3 = annualBasicPlusDA * cityPercent;
+
+    const exemptHRA = Math.min(condition1, condition2, condition3);
+    const taxableHRA = annualHRAReceived - exemptHRA;
+
+    resultDiv.innerHTML = `
+        <h2>HRA छूट परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>वार्षिक प्राप्त HRA</span>
+                <strong>${formatINR(annualHRAReceived)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>छूट प्राप्त HRA</span>
+                <strong>${formatINR(exemptHRA)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कर योग्य HRA</span>
+                <strong>${formatINR(taxableHRA)}</strong>
+            </div>
+        </div>
+
+        <h3>छूट गणना विवरण</h3>
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>शर्त</th><th>राशि</th></tr>
+                <tr><td>1. वास्तविक प्राप्त HRA</td><td>${formatINR(condition1)}</td></tr>
+                <tr><td>2. भुगतान किराया − बेसिक+DA का 10%</td><td>${formatINR(condition2)}</td></tr>
+                <tr><td>3. बेसिक+DA का ${cityPercent * 100}% (${cityType})</td><td>${formatINR(condition3)}</td></tr>
+                <tr><td><strong>छूट प्राप्त HRA (न्यूनतम)</strong></td><td><strong>${formatINR(exemptHRA)}</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">💡 केवल पुरानी कर व्यवस्था में उपलब्ध।</p>
+        <p class="note">📊 यदि वार्षिक किराया ₹1,00,000 से अधिक है, तो मकान मालिक का PAN आवश्यक है।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
