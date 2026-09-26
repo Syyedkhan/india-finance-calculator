@@ -881,3 +881,59 @@ function calculateSWP() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   12. LUMPSUM CALCULATOR (English)
+   ============================================ */
+function calculateLumpsum() {
+    const amount = parseFloat(document.getElementById("lsAmount").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("lsReturn").value) || 0;
+    const years = parseFloat(document.getElementById("lsYears").value) || 0;
+    const resultDiv = document.getElementById("lsResult");
+
+    if (!amount || amount <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Investment amount must be greater than 0.</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Return rate must be between 1% and 30%.</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 40) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 1 and 40 years.</p>';
+        return;
+    }
+
+    // Compound interest formula: A = P × (1 + r)^n
+    const rate = annualReturn / 100;
+    const maturity = amount * Math.pow(1 + rate, years);
+    const returns = maturity - amount;
+
+    // Effective annual growth
+    const growthMultiple = maturity / amount;
+
+    resultDiv.innerHTML = `
+        <h2>Lumpsum Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Invested Amount</span>
+                <strong>${formatINR(amount)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Estimated Returns</span>
+                <strong>${formatINR(returns)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Maturity Value</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Your money grows <strong>${growthMultiple.toFixed(2)}x</strong> in ${years} years at ${annualReturn}% annual return.</p>
+        <p class="note">📊 Formula: ${formatINR(amount)} × (1 + ${annualReturn}%)^${years} = ${formatINR(maturity)}</p>
+        <p class="note">⚠️ Returns are market-linked and not guaranteed. This is an estimate.</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
