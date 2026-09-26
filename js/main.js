@@ -555,3 +555,65 @@ function calculateLoanEligibility() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   8. GRATUITY CALCULATOR (English)
+   ============================================ */
+function calculateGratuity() {
+    const lastSalary = parseFloat(document.getElementById("lastSalary").value) || 0;
+    const serviceYears = parseFloat(document.getElementById("serviceYears").value) || 0;
+    const resultDiv = document.getElementById("gratuityResult");
+
+    if (!lastSalary || lastSalary <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Salary must be greater than 0.</p>';
+        return;
+    }
+    if (!serviceYears || serviceYears <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Years of service must be greater than 0.</p>';
+        return;
+    }
+    if (serviceYears < 5) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Minimum 5 years of continuous service is required to be eligible for gratuity.</p>';
+        return;
+    }
+
+    // Round off service years: >6 months = next year, <6 months = ignore
+    const decimal = serviceYears - Math.floor(serviceYears);
+    let roundedYears;
+    if (decimal >= 0.5) {
+        roundedYears = Math.ceil(serviceYears);
+    } else {
+        roundedYears = Math.floor(serviceYears);
+    }
+
+    // Gratuity formula
+    const gratuity = (15 * lastSalary * roundedYears) / 26;
+
+    // Tax exemption
+    const taxExemptLimit = 2000000; // ₹20 lakh
+    const taxableAmount = Math.max(0, gratuity - taxExemptLimit);
+
+    resultDiv.innerHTML = `
+        <h2>Gratuity Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Gratuity Amount</span>
+                <strong>${formatINR(gratuity)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Service Years (rounded)</span>
+                <strong>${roundedYears} years</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Taxable Amount</span>
+                <strong>${formatINR(taxableAmount)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Gratuity up to ₹20 lakh is tax-exempt. Amount above ₹20 lakh is taxable.</p>
+        <p class="note">📊 Formula: (15 × ₹${lastSalary.toLocaleString('en-IN')} × ${roundedYears}) / 26 = ${formatINR(gratuity)}</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
