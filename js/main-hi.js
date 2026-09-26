@@ -854,3 +854,56 @@ function calculateSWP() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   12. LUMPSUM CALCULATOR (Hindi)
+   ============================================ */
+function calculateLumpsum() {
+    const amount = parseFloat(document.getElementById("lsAmount").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("lsReturn").value) || 0;
+    const years = parseFloat(document.getElementById("lsYears").value) || 0;
+    const resultDiv = document.getElementById("lsResult");
+
+    if (!amount || amount <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ निवेश राशि 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ रिटर्न दर 1% से 30% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 40) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 1 से 40 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const rate = annualReturn / 100;
+    const maturity = amount * Math.pow(1 + rate, years);
+    const returns = maturity - amount;
+    const growthMultiple = maturity / amount;
+
+    resultDiv.innerHTML = `
+        <h2>लम्पसम परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>निवेशित राशि</span>
+                <strong>${formatINR(amount)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अनुमानित रिटर्न</span>
+                <strong>${formatINR(returns)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी मूल्य</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 आपका पैसा ${years} वर्षों में ${annualReturn}% वार्षिक रिटर्न पर <strong>${growthMultiple.toFixed(2)} गुना</strong> बढ़ता है।</p>
+        <p class="note">📊 सूत्र: ${formatINR(amount)} × (1 + ${annualReturn}%)^${years} = ${formatINR(maturity)}</p>
+        <p class="note">⚠️ रिटर्न मार्केट-लिंक्ड हैं और गारंटीड नहीं हैं। यह एक अनुमान है।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
