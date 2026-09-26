@@ -538,3 +538,65 @@ function calculateLoanEligibility() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   8. GRATUITY CALCULATOR (Hindi)
+   ============================================ */
+function calculateGratuity() {
+    const lastSalary = parseFloat(document.getElementById("lastSalary").value) || 0;
+    const serviceYears = parseFloat(document.getElementById("serviceYears").value) || 0;
+    const resultDiv = document.getElementById("gratuityResult");
+
+    if (!lastSalary || lastSalary <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ सैलरी 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!serviceYears || serviceYears <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ सेवा के वर्ष 0 से अधिक होने चाहिए।</p>';
+        return;
+    }
+    if (serviceYears < 5) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ग्रेच्युटी के लिए कम से कम 5 वर्ष की निरंतर सेवा आवश्यक है।</p>';
+        return;
+    }
+
+    // Round off service years: >6 months = next year, <6 months = ignore
+    const decimal = serviceYears - Math.floor(serviceYears);
+    let roundedYears;
+    if (decimal >= 0.5) {
+        roundedYears = Math.ceil(serviceYears);
+    } else {
+        roundedYears = Math.floor(serviceYears);
+    }
+
+    // Gratuity formula
+    const gratuity = (15 * lastSalary * roundedYears) / 26;
+
+    // Tax exemption
+    const taxExemptLimit = 2000000; // ₹20 lakh
+    const taxableAmount = Math.max(0, gratuity - taxExemptLimit);
+
+    resultDiv.innerHTML = `
+        <h2>ग्रेच्युटी परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>ग्रेच्युटी राशि</span>
+                <strong>${formatINR(gratuity)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>सेवा वर्ष (राउंडेड)</span>
+                <strong>${roundedYears} वर्ष</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कर योग्य राशि</span>
+                <strong>${formatINR(taxableAmount)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 ₹20 लाख तक ग्रेच्युटी कर मुक्त है। ₹20 लाख से अधिक राशि कर योग्य है।</p>
+        <p class="note">📊 सूत्र: (15 × ₹${lastSalary.toLocaleString('en-IN')} × ${roundedYears}) / 26 = ${formatINR(gratuity)}</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
