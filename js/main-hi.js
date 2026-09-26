@@ -686,3 +686,85 @@ function calculateInsurance() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   10. NPS CALCULATOR (Hindi)
+   ============================================ */
+function calculateNPS() {
+    const age = parseFloat(document.getElementById("npsAge").value) || 0;
+    const monthly = parseFloat(document.getElementById("npsMonthly").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("npsReturn").value) || 0;
+    const retireAge = parseFloat(document.getElementById("npsRetireAge").value) || 60;
+    const resultDiv = document.getElementById("npsResult");
+
+    if (!age || age < 18 || age > 60) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ आयु 18 से 60 के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!monthly || monthly < 500) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ न्यूनतम मासिक योगदान ₹500 है।</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ रिटर्न दर 1% से 30% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (retireAge <= age) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ सेवानिवृत्ति आयु वर्तमान आयु से अधिक होनी चाहिए।</p>';
+        return;
+    }
+
+    const years = retireAge - age;
+    const months = years * 12;
+    const monthlyRate = annualReturn / 12 / 100;
+
+    const corpus = monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+    const invested = monthly * months;
+    const returns = corpus - invested;
+
+    const lumpSum = corpus * 0.60;
+    const annuityCorpus = corpus * 0.40;
+
+    const annuityRate = 0.06;
+    const monthlyPension = (annuityCorpus * annuityRate) / 12;
+
+    resultDiv.innerHTML = `
+        <h2>NPS परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>कुल निवेश</span>
+                <strong>${formatINR(invested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अनुमानित रिटर्न</span>
+                <strong>${formatINR(returns)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कुल कॉर्पस</span>
+                <strong>${formatINR(corpus)}</strong>
+            </div>
+        </div>
+
+        <h3>सेवानिवृत्ति पर (आयु ${retireAge})</h3>
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>60% एकमुश्त (कर मुक्त)</span>
+                <strong>${formatINR(lumpSum)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>40% वार्षिकी कॉर्पस</span>
+                <strong>${formatINR(annuityCorpus)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अनुमानित मासिक पेंशन</span>
+                <strong>${formatINR(monthlyPension)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 पेंशन 6% वार्षिकी दर पर अनुमानित है। वास्तविक दरें बीमाकर्ता और वार्षिकी विकल्प के अनुसार भिन्न होती हैं।</p>
+        <p class="note">📊 कर लाभ: पुरानी व्यवस्था में धारा 80CCD(1B) के तहत अतिरिक्त ₹50,000 कटौती।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
