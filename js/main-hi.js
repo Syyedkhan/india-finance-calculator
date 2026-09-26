@@ -907,3 +907,54 @@ function calculateLumpsum() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   13. CAGR CALCULATOR (Hindi)
+   ============================================ */
+function calculateCAGR() {
+    const initial = parseFloat(document.getElementById("cagrInitial").value) || 0;
+    const final = parseFloat(document.getElementById("cagrFinal").value) || 0;
+    const years = parseFloat(document.getElementById("cagrYears").value) || 0;
+    const resultDiv = document.getElementById("cagrResult");
+
+    if (!initial || initial <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ प्रारंभिक मूल्य 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!final || final <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अंतिम मूल्य 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 0.5 से 50 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const cagr = (Math.pow(final / initial, 1 / years) - 1) * 100;
+    const absoluteReturn = ((final - initial) / initial) * 100;
+    const totalGain = final - initial;
+
+    resultDiv.innerHTML = `
+        <h2>CAGR परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>CAGR</span>
+                <strong>${cagr.toFixed(2)}%</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>पूर्ण रिटर्न</span>
+                <strong>${absoluteReturn.toFixed(2)}%</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कुल लाभ</span>
+                <strong>${formatINR(totalGain)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 आपका निवेश ${years} वर्षों में औसतन <strong>${cagr.toFixed(2)}% प्रति वर्ष</strong> की दर से बढ़ा।</p>
+        <p class="note">📊 सूत्र: [(${formatINR(final)} / ${formatINR(initial)})^(1/${years}) − 1] × 100 = ${cagr.toFixed(2)}%</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
