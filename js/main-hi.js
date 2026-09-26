@@ -1155,3 +1155,78 @@ function calculateRD() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   17. COMPOUND INTEREST CALCULATOR (Hindi)
+   ============================================ */
+function calculateCompoundInterest() {
+    const principal = parseFloat(document.getElementById("ciPrincipal").value) || 0;
+    const annualRate = parseFloat(document.getElementById("ciRate").value) || 0;
+    const years = parseFloat(document.getElementById("ciYears").value) || 0;
+    const n = parseFloat(document.getElementById("ciFrequency").value) || 1;
+    const resultDiv = document.getElementById("ciResult");
+
+    if (!principal || principal <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ मूलधन 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 0.1 || annualRate > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ब्याज दर 0.1% से 30% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 1 से 50 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const rate = annualRate / 100;
+    const maturity = principal * Math.pow(1 + rate / n, n * years);
+    const compoundInterest = maturity - principal;
+
+    const simpleInterest = principal * rate * years;
+    const simpleTotal = principal + simpleInterest;
+
+    const difference = compoundInterest - simpleInterest;
+
+    const freqNames = {
+        1: "वार्षिक",
+        2: "अर्ध-वार्षिक",
+        4: "त्रैमासिक",
+        12: "मासिक",
+        365: "दैनिक"
+    };
+
+    resultDiv.innerHTML = `
+        <h2>चक्रवृद्धि ब्याज परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>मूलधन</span>
+                <strong>${formatINR(principal)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>चक्रवृद्धि ब्याज</span>
+                <strong>${formatINR(compoundInterest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी राशि</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <h3>चक्रवृद्धि बनाम साधारण ब्याज</h3>
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>प्रकार</th><th>ब्याज</th><th>कुल राशि</th></tr>
+                <tr><td>चक्रवृद्धि ब्याज (${freqNames[n]})</td><td>${formatINR(compoundInterest)}</td><td>${formatINR(maturity)}</td></tr>
+                <tr><td>साधारण ब्याज</td><td>${formatINR(simpleInterest)}</td><td>${formatINR(simpleTotal)}</td></tr>
+                <tr><td><strong>अंतर</strong></td><td><strong>${formatINR(difference)}</strong></td><td><strong>-</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">💡 ${freqNames[n]} चक्रवृद्धि आपको साधारण ब्याज से ${formatINR(difference)} अधिक देती है।</p>
+        <p class="note">📊 सूत्र: ${formatINR(principal)} × (1 + ${annualRate}%/${n})^(${n}×${years}) = ${formatINR(maturity)}</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
