@@ -617,3 +617,90 @@ function calculateGratuity() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   9. INSURANCE CALCULATOR (English)
+   ============================================ */
+function calculateInsurance() {
+    const age = parseFloat(document.getElementById("insAge").value) || 0;
+    const income = parseFloat(document.getElementById("insIncome").value) || 0;
+    const childAge = parseFloat(document.getElementById("insChildAge").value) || 0;
+    const loans = parseFloat(document.getElementById("insLoans").value) || 0;
+    const savings = parseFloat(document.getElementById("insSavings").value) || 0;
+    const gender = document.getElementById("insGender").value;
+    const smoker = document.getElementById("insSmoker").value;
+    const resultDiv = document.getElementById("insuranceResult");
+
+    if (!age || age < 18 || age > 65) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Age must be between 18 and 65.</p>';
+        return;
+    }
+    if (!income || income <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Annual income must be greater than 0.</p>';
+        return;
+    }
+
+    // Human Life Value calculation
+    let cover = income * 15;
+
+    // Add outstanding loans
+    cover += loans;
+
+    // Add child education corpus
+    if (childAge > 0) {
+        const yearsToGrad = 21 - childAge;
+        const educationCost = 1500000; // ₹15 lakh assumed
+        cover += educationCost;
+    }
+
+    // Subtract current savings
+    cover -= savings;
+
+    // Minimum cover
+    if (cover < income * 10) {
+        cover = income * 10;
+    }
+
+    // Round to nearest lakh
+    cover = Math.round(cover / 100000) * 100000;
+
+    // Estimate premium (indicative rates)
+    let ratePerLakh = 0;
+    if (age <= 25) ratePerLakh = 80;
+    else if (age <= 30) ratePerLakh = 100;
+    else if (age <= 35) ratePerLakh = 130;
+    else if (age <= 40) ratePerLakh = 180;
+    else if (age <= 45) ratePerLakh = 260;
+    else if (age <= 50) ratePerLakh = 400;
+    else if (age <= 55) ratePerLakh = 650;
+    else ratePerLakh = 1000;
+
+    if (gender === "female") ratePerLakh = ratePerLakh * 0.85;
+    if (smoker === "yes") ratePerLakh = ratePerLakh * 1.6;
+
+    const annualPremium = (cover / 100000) * ratePerLakh;
+
+    resultDiv.innerHTML = `
+        <h2>Insurance Recommendation</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Recommended Cover</span>
+                <strong>${formatINR(cover)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Estimated Annual Premium</span>
+                <strong>${formatINR(annualPremium)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Monthly Cost</span>
+                <strong>${formatINR(annualPremium / 12)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 This is an indicative estimate. Actual premium depends on your medical history, the insurer, and policy terms.</p>
+        <p class="note">📊 Cover = (Income × 15) + Loans + Child Education − Savings</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
