@@ -1192,3 +1192,81 @@ function calculateRD() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   17. COMPOUND INTEREST CALCULATOR (English)
+   ============================================ */
+function calculateCompoundInterest() {
+    const principal = parseFloat(document.getElementById("ciPrincipal").value) || 0;
+    const annualRate = parseFloat(document.getElementById("ciRate").value) || 0;
+    const years = parseFloat(document.getElementById("ciYears").value) || 0;
+    const n = parseFloat(document.getElementById("ciFrequency").value) || 1;
+    const resultDiv = document.getElementById("ciResult");
+
+    if (!principal || principal <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Principal must be greater than 0.</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 0.1 || annualRate > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be between 0.1% and 30%.</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 1 and 50 years.</p>';
+        return;
+    }
+
+    // Compound Interest: A = P × (1 + r/n)^(n×t)
+    const rate = annualRate / 100;
+    const maturity = principal * Math.pow(1 + rate / n, n * years);
+    const compoundInterest = maturity - principal;
+
+    // Simple Interest for comparison: SI = P × r × t
+    const simpleInterest = principal * rate * years;
+    const simpleTotal = principal + simpleInterest;
+
+    // Difference
+    const difference = compoundInterest - simpleInterest;
+
+    const freqNames = {
+        1: "Yearly",
+        2: "Half-Yearly",
+        4: "Quarterly",
+        12: "Monthly",
+        365: "Daily"
+    };
+
+    resultDiv.innerHTML = `
+        <h2>Compound Interest Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Principal</span>
+                <strong>${formatINR(principal)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Compound Interest</span>
+                <strong>${formatINR(compoundInterest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Maturity Amount</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <h3>Compound vs Simple Interest</h3>
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>Type</th><th>Interest</th><th>Total Amount</th></tr>
+                <tr><td>Compound Interest (${freqNames[n]})</td><td>${formatINR(compoundInterest)}</td><td>${formatINR(maturity)}</td></tr>
+                <tr><td>Simple Interest</td><td>${formatINR(simpleInterest)}</td><td>${formatINR(simpleTotal)}</td></tr>
+                <tr><td><strong>Difference</strong></td><td><strong>${formatINR(difference)}</strong></td><td><strong>-</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">💡 Compounding ${freqNames[n].toLowerCase()} gives you ${formatINR(difference)} more than simple interest.</p>
+        <p class="note">📊 Formula: ${formatINR(principal)} × (1 + ${annualRate}%/${n})^(${n}×${years}) = ${formatINR(maturity)}</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
