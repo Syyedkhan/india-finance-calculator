@@ -1053,3 +1053,78 @@ function calculatePPF() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   15. HRA CALCULATOR (English)
+   ============================================ */
+function calculateHRA() {
+    const basic = parseFloat(document.getElementById("hraBasic").value) || 0;
+    const da = parseFloat(document.getElementById("hraDA").value) || 0;
+    const hraReceived = parseFloat(document.getElementById("hraReceived").value) || 0;
+    const rentPaid = parseFloat(document.getElementById("hraRent").value) || 0;
+    const cityType = document.getElementById("hraCity").value;
+    const resultDiv = document.getElementById("hraResult");
+
+    if (!basic || basic <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Basic salary must be greater than 0.</p>';
+        return;
+    }
+    if (!hraReceived || hraReceived <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ HRA received must be greater than 0.</p>';
+        return;
+    }
+    if (!rentPaid || rentPaid <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Rent paid must be greater than 0.</p>';
+        return;
+    }
+
+    const basicPlusDA = basic + da;
+    const annualBasicPlusDA = basicPlusDA * 12;
+    const annualHRAReceived = hraReceived * 12;
+    const annualRentPaid = rentPaid * 12;
+
+    // Three conditions
+    const condition1 = annualHRAReceived;
+    const condition2 = Math.max(0, annualRentPaid - (annualBasicPlusDA * 0.10));
+    const cityPercent = cityType === "metro" ? 0.50 : 0.40;
+    const condition3 = annualBasicPlusDA * cityPercent;
+
+    // Exempt HRA = minimum of three
+    const exemptHRA = Math.min(condition1, condition2, condition3);
+    const taxableHRA = annualHRAReceived - exemptHRA;
+
+    resultDiv.innerHTML = `
+        <h2>HRA Exemption Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Annual HRA Received</span>
+                <strong>${formatINR(annualHRAReceived)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Exempt HRA</span>
+                <strong>${formatINR(exemptHRA)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Taxable HRA</span>
+                <strong>${formatINR(taxableHRA)}</strong>
+            </div>
+        </div>
+
+        <h3>Exemption Calculation Breakdown</h3>
+        <div class="table-wrap">
+            <table class="amort-table">
+                <tr><th>Condition</th><th>Amount</th></tr>
+                <tr><td>1. Actual HRA Received</td><td>${formatINR(condition1)}</td></tr>
+                <tr><td>2. Rent Paid − 10% of Basic+DA</td><td>${formatINR(condition2)}</td></tr>
+                <tr><td>3. ${cityPercent * 100}% of Basic+DA (${cityType})</td><td>${formatINR(condition3)}</td></tr>
+                <tr><td><strong>Exempt HRA (minimum)</strong></td><td><strong>${formatINR(exemptHRA)}</strong></td></tr>
+            </table>
+        </div>
+
+        <p class="note">💡 Available only under the Old Tax Regime.</p>
+        <p class="note">📊 If annual rent exceeds ₹1,00,000, landlord's PAN is required.</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
