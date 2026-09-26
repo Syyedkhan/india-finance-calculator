@@ -1094,3 +1094,64 @@ function calculateHRA() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   16. RD CALCULATOR (Hindi)
+   ============================================ */
+function calculateRD() {
+    const monthly = parseFloat(document.getElementById("rdAmount").value) || 0;
+    const annualRate = parseFloat(document.getElementById("rdRate").value) || 0;
+    const months = parseFloat(document.getElementById("rdMonths").value) || 0;
+    const resultDiv = document.getElementById("rdResult");
+
+    if (!monthly || monthly < 100) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ न्यूनतम मासिक जमा ₹100 है।</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 1 || annualRate > 15) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ब्याज दर 1% से 15% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!months || months < 6 || months > 120) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 6 से 120 महीने के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const quarterlyRate = annualRate / 400;
+    let maturity = 0;
+
+    for (let m = 1; m <= months; m++) {
+        const monthsRemaining = months - m + 1;
+        const quarters = monthsRemaining / 3;
+        const installmentValue = monthly * Math.pow(1 + quarterlyRate, quarters);
+        maturity += installmentValue;
+    }
+
+    const totalInvested = monthly * months;
+    const interest = maturity - totalInvested;
+
+    resultDiv.innerHTML = `
+        <h2>RD परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>कुल निवेश</span>
+                <strong>${formatINR(totalInvested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अर्जित ब्याज</span>
+                <strong>${formatINR(interest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी राशि</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 ${formatINR(monthly)} की मासिक जमा ${months} महीनों के लिए ${annualRate}% प्रति वर्ष पर।</p>
+        <p class="note">📊 ब्याज त्रैमासिक रूप से चक्रवृद्धि होता है। वास्तविक दरें बैंक के अनुसार भिन्न हो सकती हैं।</p>
+        <p class="note">⚠️ ब्याज कर योग्य है। यदि वार्षिक ब्याज ₹40,000 से अधिक है तो TDS लागू होता है।</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
