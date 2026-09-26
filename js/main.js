@@ -793,3 +793,91 @@ function calculateNPS() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   11. SWP CALCULATOR (English)
+   ============================================ */
+function calculateSWP() {
+    const investment = parseFloat(document.getElementById("swpInvestment").value) || 0;
+    const monthlyWithdrawal = parseFloat(document.getElementById("swpWithdrawal").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("swpReturn").value) || 0;
+    const years = parseFloat(document.getElementById("swpYears").value) || 0;
+    const resultDiv = document.getElementById("swpResult");
+
+    if (!investment || investment <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Investment must be greater than 0.</p>';
+        return;
+    }
+    if (!monthlyWithdrawal || monthlyWithdrawal <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Monthly withdrawal must be greater than 0.</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Return rate must be between 1% and 30%.</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 40) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 1 and 40 years.</p>';
+        return;
+    }
+
+    const monthlyRate = annualReturn / 12 / 100;
+    const months = years * 12;
+
+    let balance = investment;
+    let totalWithdrawn = 0;
+    let monthsLasted = 0;
+    let depleted = false;
+
+    for (let m = 0; m < months; m++) {
+        // Add monthly return
+        balance = balance * (1 + monthlyRate);
+        // Withdraw
+        if (balance >= monthlyWithdrawal) {
+            balance -= monthlyWithdrawal;
+            totalWithdrawn += monthlyWithdrawal;
+            monthsLasted++;
+        } else {
+            totalWithdrawn += balance;
+            balance = 0;
+            depleted = true;
+            monthsLasted++;
+            break;
+        }
+    }
+
+    const finalBalance = balance;
+    const yearsLasted = (monthsLasted / 12).toFixed(1);
+
+    let statusMsg = "";
+    if (depleted) {
+        statusMsg = `<p class="note" style="background:#fff3cd;">⚠️ Your corpus will be depleted in approximately <strong>${yearsLasted} years</strong>. Consider reducing your monthly withdrawal.</p>`;
+    } else {
+        statusMsg = `<p class="note">✅ Your corpus will last the full ${years} years with ${formatINR(finalBalance)} remaining.</p>`;
+    }
+
+    resultDiv.innerHTML = `
+        <h2>SWP Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Total Withdrawn</span>
+                <strong>${formatINR(totalWithdrawn)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Remaining Corpus</span>
+                <strong>${formatINR(finalBalance)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Corpus Duration</span>
+                <strong>${yearsLasted} years</strong>
+            </div>
+        </div>
+
+        ${statusMsg}
+
+        <p class="note">📊 Initial Investment: ${formatINR(investment)} | Monthly Withdrawal: ${formatINR(monthlyWithdrawal)} | Expected Return: ${annualReturn}%</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
