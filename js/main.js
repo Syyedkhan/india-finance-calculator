@@ -1128,3 +1128,67 @@ function calculateHRA() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   16. RD CALCULATOR (English)
+   ============================================ */
+function calculateRD() {
+    const monthly = parseFloat(document.getElementById("rdAmount").value) || 0;
+    const annualRate = parseFloat(document.getElementById("rdRate").value) || 0;
+    const months = parseFloat(document.getElementById("rdMonths").value) || 0;
+    const resultDiv = document.getElementById("rdResult");
+
+    if (!monthly || monthly < 100) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Minimum monthly deposit is ₹100.</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 1 || annualRate > 15) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be between 1% and 15%.</p>';
+        return;
+    }
+    if (!months || months < 6 || months > 120) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Tenure must be between 6 and 120 months.</p>';
+        return;
+    }
+
+    // RD calculation with quarterly compounding
+    // Each monthly installment earns interest for the remaining months
+    const quarterlyRate = annualRate / 400; // quarterly rate as decimal
+    let maturity = 0;
+
+    for (let m = 1; m <= months; m++) {
+        const monthsRemaining = months - m + 1;
+        const quarters = monthsRemaining / 3;
+        // Each installment compounds quarterly
+        const installmentValue = monthly * Math.pow(1 + quarterlyRate, quarters);
+        maturity += installmentValue;
+    }
+
+    const totalInvested = monthly * months;
+    const interest = maturity - totalInvested;
+
+    resultDiv.innerHTML = `
+        <h2>RD Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Total Invested</span>
+                <strong>${formatINR(totalInvested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Interest Earned</span>
+                <strong>${formatINR(interest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Maturity Amount</span>
+                <strong>${formatINR(maturity)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Monthly deposit of ${formatINR(monthly)} for ${months} months at ${annualRate}% p.a.</p>
+        <p class="note">📊 Interest is compounded quarterly. Actual rates may vary by bank.</p>
+        <p class="note">⚠️ Interest is taxable. TDS applies if annual interest exceeds ₹40,000.</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
