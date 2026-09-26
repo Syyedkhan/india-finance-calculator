@@ -989,3 +989,67 @@ function calculateCAGR() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   14. PPF CALCULATOR (English)
+   ============================================ */
+function calculatePPF() {
+    const yearlyAmount = parseFloat(document.getElementById("ppfAmount").value) || 0;
+    const annualRate = parseFloat(document.getElementById("ppfRate").value) || 0;
+    const years = parseFloat(document.getElementById("ppfYears").value) || 0;
+    const resultDiv = document.getElementById("ppfResult");
+
+    if (!yearlyAmount || yearlyAmount < 500) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Minimum yearly investment is ₹500.</p>';
+        return;
+    }
+    if (yearlyAmount > 150000) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Maximum yearly investment is ₹1,50,000.</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 1 || annualRate > 15) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be between 1% and 15%.</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Period must be between 1 and 50 years.</p>';
+        return;
+    }
+
+    // PPF calculation: yearly investment compounded annually
+    const rate = annualRate / 100;
+    let balance = 0;
+    let totalInvested = 0;
+
+    for (let y = 0; y < years; y++) {
+        balance = (balance + yearlyAmount) * (1 + rate);
+        totalInvested += yearlyAmount;
+    }
+
+    const interest = balance - totalInvested;
+
+    resultDiv.innerHTML = `
+        <h2>PPF Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Total Invested</span>
+                <strong>${formatINR(totalInvested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Interest Earned</span>
+                <strong>${formatINR(interest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Maturity Amount</span>
+                <strong>${formatINR(balance)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Tax-free returns: Investment + Interest + Maturity all exempt under EEE.</p>
+        <p class="note">📊 Investment under Section 80C eligible for deduction up to ₹1.5 lakh (Old Regime).</p>
+        <p class="note">⚠️ PPF interest rates are revised quarterly. Rate used: ${annualRate}%</p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
