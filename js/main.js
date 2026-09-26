@@ -472,3 +472,86 @@ function calculateIncomeTax() {
         <a href="index.html" class="back-link">← Back to Home</a>
     `;
 }
+
+/* ============================================
+   7. LOAN ELIGIBILITY CALCULATOR (English)
+   ============================================ */
+function calculateLoanEligibility() {
+    const monthlyIncome = parseFloat(document.getElementById("monthlyIncome").value) || 0;
+    const existingEmi = parseFloat(document.getElementById("existingEmi").value) || 0;
+    const loanType = document.getElementById("loanType").value;
+    const annualRate = parseFloat(document.getElementById("loanRate").value) || 0;
+    const years = parseFloat(document.getElementById("loanTenure").value) || 0;
+    const age = parseFloat(document.getElementById("age").value) || 0;
+    const resultDiv = document.getElementById("loanResult");
+
+    if (!monthlyIncome || monthlyIncome <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Monthly income must be greater than 0.</p>';
+        return;
+    }
+    if (!annualRate || annualRate <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Interest rate must be greater than 0.</p>';
+        return;
+    }
+    if (!years || years <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Tenure must be greater than 0.</p>';
+        return;
+    }
+    if (age < 21 || age > 65) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Age must be between 21 and 65.</p>';
+        return;
+    }
+
+    // FOIR based on loan type
+    let foir = 0.50;
+    if (loanType === "car") foir = 0.40;
+    if (loanType === "personal") foir = 0.35;
+
+    // Max EMI possible
+    const maxEmi = (monthlyIncome * foir) - existingEmi;
+
+    if (maxEmi <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ Your existing EMIs are too high. No additional loan possible.</p>';
+        return;
+    }
+
+    // Max loan based on EMI capacity
+    const monthlyRate = annualRate / 12 / 100;
+    const months = years * 12;
+    const maxLoan = maxEmi * (Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months));
+
+    // Age-based tenure check
+    const maxTenureByAge = 65 - age;
+    let tenureWarning = "";
+    if (years > maxTenureByAge) {
+        tenureWarning = `<p class="note" style="background:#fff3cd;">⚠️ Note: Banks usually cap loan tenure so it ends by age 65. Based on your age (${age}), max tenure is about ${maxTenureByAge} years.</p>`;
+    }
+
+    // Total interest
+    const totalPayment = maxEmi * months;
+    const totalInterest = totalPayment - maxLoan;
+
+    resultDiv.innerHTML = `
+        <h2>Loan Eligibility Result</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>Maximum Loan</span>
+                <strong>${formatINR(maxLoan)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Max Monthly EMI</span>
+                <strong>${formatINR(maxEmi)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>Total Interest</span>
+                <strong>${formatINR(totalInterest)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 Your FOIR for this loan type is <strong>${(foir * 100)}%</strong>. Existing EMIs of ${formatINR(existingEmi)} have been deducted.</p>
+        ${tenureWarning}
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    `;
+}
