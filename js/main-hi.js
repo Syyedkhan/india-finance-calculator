@@ -768,3 +768,89 @@ function calculateNPS() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   11. SWP CALCULATOR (Hindi)
+   ============================================ */
+function calculateSWP() {
+    const investment = parseFloat(document.getElementById("swpInvestment").value) || 0;
+    const monthlyWithdrawal = parseFloat(document.getElementById("swpWithdrawal").value) || 0;
+    const annualReturn = parseFloat(document.getElementById("swpReturn").value) || 0;
+    const years = parseFloat(document.getElementById("swpYears").value) || 0;
+    const resultDiv = document.getElementById("swpResult");
+
+    if (!investment || investment <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ निवेश 0 से अधिक होना चाहिए।</p>';
+        return;
+    }
+    if (!monthlyWithdrawal || monthlyWithdrawal <= 0) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ मासिक निकासी 0 से अधिक होनी चाहिए।</p>';
+        return;
+    }
+    if (!annualReturn || annualReturn < 1 || annualReturn > 30) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ रिटर्न दर 1% से 30% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 40) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 1 से 40 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const monthlyRate = annualReturn / 12 / 100;
+    const months = years * 12;
+
+    let balance = investment;
+    let totalWithdrawn = 0;
+    let monthsLasted = 0;
+    let depleted = false;
+
+    for (let m = 0; m < months; m++) {
+        balance = balance * (1 + monthlyRate);
+        if (balance >= monthlyWithdrawal) {
+            balance -= monthlyWithdrawal;
+            totalWithdrawn += monthlyWithdrawal;
+            monthsLasted++;
+        } else {
+            totalWithdrawn += balance;
+            balance = 0;
+            depleted = true;
+            monthsLasted++;
+            break;
+        }
+    }
+
+    const finalBalance = balance;
+    const yearsLasted = (monthsLasted / 12).toFixed(1);
+
+    let statusMsg = "";
+    if (depleted) {
+        statusMsg = `<p class="note" style="background:#fff3cd;">⚠️ आपकी कॉर्पस लगभग <strong>${yearsLasted} वर्षों</strong> में समाप्त हो जाएगी। मासिक निकासी कम करने पर विचार करें।</p>`;
+    } else {
+        statusMsg = `<p class="note">✅ आपकी कॉर्पस पूरे ${years} वर्ष चलेगी और ${formatINR(finalBalance)} शेष रहेगा।</p>`;
+    }
+
+    resultDiv.innerHTML = `
+        <h2>SWP परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>कुल निकासी</span>
+                <strong>${formatINR(totalWithdrawn)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>शेष कॉर्पस</span>
+                <strong>${formatINR(finalBalance)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>कॉर्पस अवधि</span>
+                <strong>${yearsLasted} वर्ष</strong>
+            </div>
+        </div>
+
+        ${statusMsg}
+
+        <p class="note">📊 प्रारंभिक निवेश: ${formatINR(investment)} | मासिक निकासी: ${formatINR(monthlyWithdrawal)} | अपेक्षित रिटर्न: ${annualReturn}%</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
