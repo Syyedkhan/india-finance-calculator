@@ -958,3 +958,66 @@ function calculateCAGR() {
         <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
     `;
 }
+
+/* ============================================
+   14. PPF CALCULATOR (Hindi)
+   ============================================ */
+function calculatePPF() {
+    const yearlyAmount = parseFloat(document.getElementById("ppfAmount").value) || 0;
+    const annualRate = parseFloat(document.getElementById("ppfRate").value) || 0;
+    const years = parseFloat(document.getElementById("ppfYears").value) || 0;
+    const resultDiv = document.getElementById("ppfResult");
+
+    if (!yearlyAmount || yearlyAmount < 500) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ न्यूनतम वार्षिक निवेश ₹500 है।</p>';
+        return;
+    }
+    if (yearlyAmount > 150000) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अधिकतम वार्षिक निवेश ₹1,50,000 है।</p>';
+        return;
+    }
+    if (!annualRate || annualRate < 1 || annualRate > 15) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ ब्याज दर 1% से 15% के बीच होनी चाहिए।</p>';
+        return;
+    }
+    if (!years || years <= 0 || years > 50) {
+        resultDiv.innerHTML = '<p class="error-msg">⚠️ अवधि 1 से 50 वर्ष के बीच होनी चाहिए।</p>';
+        return;
+    }
+
+    const rate = annualRate / 100;
+    let balance = 0;
+    let totalInvested = 0;
+
+    for (let y = 0; y < years; y++) {
+        balance = (balance + yearlyAmount) * (1 + rate);
+        totalInvested += yearlyAmount;
+    }
+
+    const interest = balance - totalInvested;
+
+    resultDiv.innerHTML = `
+        <h2>PPF परिणाम</h2>
+
+        <div class="emi-result-grid">
+            <div class="emi-result-card">
+                <span>कुल निवेश</span>
+                <strong>${formatINR(totalInvested)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>अर्जित ब्याज</span>
+                <strong>${formatINR(interest)}</strong>
+            </div>
+            <div class="emi-result-card">
+                <span>मैच्योरिटी राशि</span>
+                <strong>${formatINR(balance)}</strong>
+            </div>
+        </div>
+
+        <p class="note">💡 कर-मुक्त रिटर्न: निवेश + ब्याज + मैच्योरिटी सभी EEE के तहत छूट।</p>
+        <p class="note">📊 धारा 80C के तहत ₹1.5 लाख तक कटौती के लिए पात्र (पुरानी व्यवस्था)।</p>
+        <p class="note">⚠️ PPF ब्याज दरें त्रैमासिक संशोधित होती हैं। प्रयुक्त दर: ${annualRate}%</p>
+
+        <a href="index-hi.html" class="back-link">← होम पर वापस जाएं</a>
+    `;
+}
