@@ -7,7 +7,7 @@
     --primary-light: #e0f2fe;
     --text-dark: #111827;
     --text: #1f2937;
-    --text-muted: #6b7280;
+    --text-muted: #4b5563;        /* CHANGED: darker for contrast */
     --border: #e5e7eb;
     --bg: #f5f7fa;
     --white: #ffffff;
@@ -47,7 +47,7 @@ body {
 .tagline {
     margin: 6px 0 0;
     font-size: 14px;
-    opacity: 0.9;
+    opacity: 1;                    /* CHANGED: was 0.9 */
 }
 
 .main-nav {
@@ -341,7 +341,7 @@ body {
 
 .note {
     background: #fffbeb;
-    color: #92400e;
+    color: #78350f;                /* CHANGED: darker for contrast */
     padding: 14px 18px;
     border-radius: var(--radius-sm);
     border-left: 4px solid var(--warning);
@@ -355,7 +355,7 @@ body {
 .back-link {
     display: inline-block;
     margin-top: 20px;
-    color: var(--primary);
+    color: var(--primary-dark);    /* CHANGED: darker for contrast */
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -391,7 +391,7 @@ body {
 .footer-nav a {
     color: var(--white);
     text-decoration: none;
-    opacity: 0.85;
+    opacity: 1;                    /* CHANGED: was 0.85 */
     transition: 0.2s;
 }
 
@@ -466,9 +466,9 @@ body {
         justify-content: center;
     }
 }
-/* ========== BLOG STYLES ========== */
 
-/* Blog post content */
+
+/* ========== BLOG STYLES ========== */
 .info-section h3 {
     font-size: 20px;
     color: var(--text-dark);
@@ -487,7 +487,7 @@ body {
 }
 
 .info-section a {
-    color: var(--primary);
+    color: var(--primary-dark);    /* CHANGED: darker for contrast */
     text-decoration: none;
     font-weight: 500;
 }
@@ -501,12 +501,10 @@ body {
     font-size: 14px;
 }
 
-/* Blog post hero */
 .hero h1 {
     line-height: 1.3;
 }
 
-/* Blog post em (date/reading time) */
 .info-section > p:first-of-type em {
     display: inline-block;
     background: var(--primary-light);
@@ -519,25 +517,22 @@ body {
     margin-bottom: 20px;
 }
 
-/* Blog post tables */
 .info-section .table-wrap {
     margin: 20px 0;
 }
 
-/* Blog post paragraphs */
 .info-section > p {
     margin-bottom: 16px;
     color: var(--text);
     line-height: 1.8;
 }
 
-/* Blog post strong */
 .info-section strong {
     color: var(--text-dark);
 }
-/* Language Switch Button */
+
 .lang-switch {
-    background: #ff9933;
+    background: #cc7a00;           /* CHANGED: darker orange for contrast */
     color: white !important;
     padding: 6px 12px;
     border-radius: 15px;
@@ -546,5 +541,5 @@ body {
 }
 
 .lang-switch:hover {
-    background: #e68a2e;
+    background: #a86200;
 }
