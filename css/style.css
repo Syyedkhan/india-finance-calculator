@@ -7,7 +7,7 @@
     --primary-light: #e0f2fe;
     --text-dark: #111827;
     --text: #1f2937;
-    --text-muted: #4b5563;        /* CHANGED: darker for contrast */
+    --text-muted: #4b5563;
     --border: #e5e7eb;
     --bg: #f5f7fa;
     --white: #ffffff;
@@ -47,7 +47,7 @@ body {
 .tagline {
     margin: 6px 0 0;
     font-size: 14px;
-    opacity: 1;                    /* CHANGED: was 0.9 */
+    opacity: 1;
 }
 
 .main-nav {
@@ -341,7 +341,7 @@ body {
 
 .note {
     background: #fffbeb;
-    color: #78350f;                /* CHANGED: darker for contrast */
+    color: #78350f;
     padding: 14px 18px;
     border-radius: var(--radius-sm);
     border-left: 4px solid var(--warning);
@@ -355,7 +355,7 @@ body {
 .back-link {
     display: inline-block;
     margin-top: 20px;
-    color: var(--primary-dark);    /* CHANGED: darker for contrast */
+    color: var(--primary-dark);
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -391,7 +391,7 @@ body {
 .footer-nav a {
     color: var(--white);
     text-decoration: none;
-    opacity: 1;                    /* CHANGED: was 0.85 */
+    opacity: 1;
     transition: 0.2s;
 }
 
@@ -487,7 +487,7 @@ body {
 }
 
 .info-section a {
-    color: var(--primary-dark);    /* CHANGED: darker for contrast */
+    color: var(--primary-dark);
     text-decoration: none;
     font-weight: 500;
 }
@@ -532,7 +532,7 @@ body {
 }
 
 .lang-switch {
-    background: #cc7a00;           /* CHANGED: darker orange for contrast */
+    background: #cc7a00;
     color: white !important;
     padding: 6px 12px;
     border-radius: 15px;
